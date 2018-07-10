@@ -1,6 +1,15 @@
-fun main(args : Array<String>) {
-    println("Hello world")
-    var a : Array<Array<Double>> = Array(2, {Array(2, {0.0})})
-    a[1][1] = 1.0
+import java.io.FileWriter
 
+fun main(args : Array<String>) {
+    val string = GuitarString()
+    val file = FileWriter("data.out")
+    val DT = 0.0001
+
+    string.hit(80) // hit the string
+    for(t in 1..20000) {
+        string.step(DT)
+        file.write("${t*DT} ${string.forceOnBridge().toString()}\n")
+    }
+    file.close()
 }
+
