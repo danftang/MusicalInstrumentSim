@@ -3,9 +3,9 @@ class GuitarString {
     val dx = 1.0 / 200.0      // distance between masses (m)
     val rho = 0.2           // weight of string per metre (kg/m)
     val m = rho * dx          // weight of each mass (kg)
-    val T = 10              // tension in the string (N)
-    val dt = 0.0000001           // timestep (s)
-    val f = 0.001           // energy loss due to air friction (Ns/m)
+    val T = 15              // tension in the string (N)
+    val dt = 0.00000005           // timestep (s)
+    val f = 0.002           // energy loss due to air friction (Ns/m)
 
     val x = DoubleArray(N, { 0.0 }) // string position, initialised at equilibrium
     val v = DoubleArray(N, { 0.0 }) // velocity of string, initially at rest
@@ -30,6 +30,17 @@ class GuitarString {
 
     fun hit(i : Int) {
         v[i] = 1.0
+    }
+
+    fun pluck(i : Int) {
+        val a = 0.001
+        for(j in 0 until x.size) {
+            if(j <= i) {
+                x[j] = (j+1)*a/(i+1)
+            } else {
+                x[j] = (x.size-j)*a/(x.size-i)
+            }
+        }
     }
 
     fun d2_dx2(a : DoubleArray, i : Int) : Double {

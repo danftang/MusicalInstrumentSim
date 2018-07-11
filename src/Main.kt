@@ -1,15 +1,15 @@
-import java.io.FileWriter
 
 fun main(args : Array<String>) {
     val string = GuitarString()
-    val file = FileWriter("data.out")
-    val DT = 0.0001
+    val DT = 1.0/44100.0
+    val steps = (5.0/DT).toInt()
+    val audioData = DoubleArray(steps)
 
     string.hit(80) // hit the string
-    for(t in 1..20000) {
+    for(t in 0 until steps) {
         string.step(DT)
-        file.write("${t*DT} ${string.forceOnBridge().toString()}\n")
+        audioData[t] = string.forceOnBridge()
     }
-    file.close()
-}
 
+    WavWriter.writeMonoWavFile(audioData, "data.wav")
+}
