@@ -25,7 +25,7 @@ class GuitarString {
 
 
     fun step() {
-        step3rdOrder()
+        step2ndOrderv2()
     }
 
     fun step2ndOrder() {
