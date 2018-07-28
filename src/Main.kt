@@ -1,12 +1,18 @@
 import kotlin.math.sin
 
 fun main(args : Array<String>) {
+    val sheet = FEMetalSheet()
+
+
+}
+
+fun simulateSheet() {
     val sheet = MetalSheet()
     val DT = 1.0/44100.0
     val steps = (1.5/DT).toInt()
     val audioData = DoubleArray(steps)
 
-    sheet.hit(sheet.X/4, sheet.Y/4) // hit the string
+    sheet.hit(sheet.X/4, sheet.Y/4)
     for(t in 0 until steps) {
         sheet.step(DT)
         if(t%100 == 0) println(sheet.sound())
