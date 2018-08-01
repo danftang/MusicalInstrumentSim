@@ -18,8 +18,8 @@ class Field<DATA : DoubleLike<DATA>>(val data : IMutableArray<DATA>, val leftBou
 //
 //    override var domain: Domain<DATATYPE>
 //
-//    constructor(xSize: Int, ySize: Int, domain: Domain<DATATYPE>, vals: (Int, Int) -> DATATYPE) :
-//            super(xSize, ySize, vals) {
+//    constructor(iSize: Int, jSize: Int, domain: Domain<DATATYPE>, vals: (Int, Int) -> DATATYPE) :
+//            super(iSize, jSize, vals) {
 //        this.domain = domain.clone()
 //        attachBoundaries()
 //    }
