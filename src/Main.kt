@@ -1,9 +1,18 @@
 import kotlin.math.sin
 
 fun main(args : Array<String>) {
-    val sheet = FEMetalSheet()
+    val bar = MetalBar()
+    val steps = (2.0/bar.DT).toInt()
+    val audioData = DoubleArray(steps)
 
+    bar.hit(bar.N/4)
+    for(t in 0 until steps) {
+        bar.step()
+        audioData[t] = bar.sound()
+        if(t%4410 == 0) println(audioData[t])
+    }
 
+    WavWriter.writeMonoWavFile(audioData, "data.wav")
 }
 
 fun simulateSheet() {
