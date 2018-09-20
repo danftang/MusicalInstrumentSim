@@ -1,5 +1,3 @@
-import kotlin.math.sin
-
 fun main(args : Array<String>) {
     val bar = MetalBar()
     val steps = (2.0/bar.DT).toInt()
@@ -16,7 +14,7 @@ fun main(args : Array<String>) {
 }
 
 fun simulateSheet() {
-    val sheet = MetalSheet()
+    val sheet = ElasticSheet()
     val DT = 1.0/44100.0
     val steps = (1.5/DT).toInt()
     val audioData = DoubleArray(steps)

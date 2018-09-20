@@ -1,4 +1,4 @@
-class MetalSheet {
+class ElasticSheet {
     val X = 90             // number of masses horizontallu
     val Y = 90             // numner of masses vertically
     val dx = 0.5 / (X+1)    // distance between masses (m)

@@ -1,6 +1,6 @@
 package materials
 
-object StainlessSteel : PhysicalProperties {
+object StainlessSteel304 : PhysicalProperties {
     // Source: https://www.makeitfrom.com/material-properties/Annealed-304-Stainless-Steel
     override val E: Double = 2.0e11     // Young's modulus
     override val G: Double = 7.7e10     // Shear modulus
