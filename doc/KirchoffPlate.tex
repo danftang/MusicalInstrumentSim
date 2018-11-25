@@ -1,0 +1,155 @@
+\documentclass[a4paper]{article}
+\usepackage{graphics}
+%%\usepackage[english,greek]{babel}
+\setlength{\parindent}{0mm}
+\setlength{\parskip}{1.8mm}
+\newtheorem{definition}{Definition}
+\newtheorem{theorem}{Theorem}
+\newtheorem{proof}{Proof}
+\title{Finite difference scheme for a Kirchoff thin plate with free edges}
+%%\date{$28^{th}$ August, 2007}
+\author{Daniel Tang}
+%%\linespread{1.3}
+
+\begin{document}
+%%\selectlanguage{english}
+\maketitle
+The vibrations in a thin, isotropic, homogeneous plate can be described as
+\[
+\frac{\partial^2 u}{\partial t^2} = -\kappa^2 \Delta \Delta u
+\]
+where
+\[
+\kappa = \frac{EH^2}{12\rho(1-\nu^2)}
+\]
+where $E$ is the Youngs modulus of the material, $H$ is the thickness of the plate, $\rho$ is its density and $\nu$ is its Poisson ratio.
+
+For free edges, we have the boundary conditions (along a left-hand edge):
+\[
+\frac{\partial^2u}{\partial x^2} + \nu \frac{\partial^2u}{\partial y^2} = 0
+\]
+and
+\[
+\frac{\partial^3u}{\partial x^3} + (2-\nu) \frac{\partial^3u}{\partial xy^2} = 0
+\]
+while at a corner
+\[
+\frac{\partial^2u}{\partial xy} = 0
+\]
+Boundary conditions for other edge orientations can be inferred by symmetry.
+
+Using the notation $\partial_x$, $\partial_{xx}$ etc to mean the second order, central finite difference approximation of $\frac{\partial}{\partial x}$, $\frac{\partial^2}{\partial x^2}$ etc. and $\partial_{x+}$ and $\partial_{x-}$ to mean the second order, forward and backward finite difference respectively, we can express the thin plate equation as a finite difference scheme:
+\[
+\partial_{tt} u = -\kappa (\partial_{xx} + \partial_{yy})(\partial_{xx} + \partial_{yy})u
+\]
+The boundary conditions along a left-hand edge can be expressed
+\begin{equation}
+\partial_{xx}u + \nu \partial_{yy}u = 0
+\label{boundary1}
+\end{equation}
+\begin{equation}
+\partial_{x-}(\partial_{xx}u + (2-\nu)\partial_{yy}u) = 0
+\label{boundary2}
+\end{equation}
+and at a bottom-left corner as
+\begin{equation}
+\partial_{x-y-}u = 0
+\label{boundarycorner}
+\end{equation}
+
+\subsection{Laplacian finite difference at an edge}
+At a left-hand edge, from equation \ref{boundary1} we have
+\[
+\partial_{xx} = - \nu \partial_{yy} 
+\]
+so
+\begin{equation}
+\Delta = \partial_{xx} + \partial_{yy} = (1-\nu)\partial_{yy}
+\label{delta}
+\end{equation}
+
+Rearranging equation \ref{boundary2} gives
+\[
+\partial_{x-}(\Delta + (1-\nu)\partial_{yy}) = 0
+\]
+so, at a left-hand edge
+\begin{equation}
+\partial_{x-}\Delta = (1-\nu)\partial_{x-yy}
+\end{equation}
+but
+\begin{equation}
+\partial_{xx}\Delta = \frac{\partial_{x+}\Delta - \partial_{x-}\Delta}{Dx} = \frac{\partial_{x+}\Delta - (1-\nu)\partial_{x-yy}}{Dx}
+\label{xdelta}
+\end{equation}
+where $Dx$ is the grid spacing in the $x$ direction.
+
+Differentiating equation \ref{boundary1} with respect to y gives
+\[
+\partial_{xxyy} = \frac{\partial_{x+yy} - \partial_{x-yy}}{Dx}= -\nu\partial_{yyyy}
+\]
+so
+\[
+\partial_{x-yy} = \partial_{x+yy} + Dx\nu\partial_{yyyy}
+\]
+substituting back into equation \ref{xdelta}
+\[
+\partial_{xx}\Delta = \frac{\partial_{x+}\Delta -(1-\nu)(\partial_{x+yy} + Dx\nu\partial_{yyyy})}{Dx}
+\]
+but, differentiating equation \ref{delta} by y gives
+\[
+\partial_{yy}\Delta = (1-\nu)\partial_{yyyy}
+\]
+so, at a left-hand edge
+\begin{equation}
+\Delta\Delta = \frac{\partial_{x+}\Delta -(1-\nu)\partial_{x+yy}}{Dx} - (1-\nu)^2\partial_{yyyy}
+\label{DeltaDelta}
+\end{equation}
+
+\subsection{Laplacian finite difference at a corner}
+At the bottom-left corner we have, from equation \ref{boundary1},
+\[
+\partial_{xx} = - \nu \partial_{yy} 
+\]
+and
+\[
+\partial_{yy} = - \nu \partial_{xx} 
+\]
+Since $\nu$ is positive, this implies $\partial_{xx} = 0$ and $\partial_{yy} = 0$ so $\Delta = 0$
+
+At the corner, we cannot differentiate past the corner, so we need to calculate $\partial_{x-yy}$ in a different way:
+\[
+\partial_{x-yy} = \frac{\partial_{x-}(\partial_{y+} - \partial_{y-})}{Dy}
+\]
+so, from equation \ref{boundarycorner}
+\[
+\partial_{x-yy} = \frac{\partial_{x-y+}}{Dy}
+\]
+However,  along the left-hand edge
+\[
+\frac{\partial_{x+} - \partial_{x-}}{Dx}=-\nu\partial_{yy}
+\]
+so
+\[
+ \partial_{x-}=Dx\nu\partial_{yy} + \partial_{x+}
+\]
+so
+\[
+\partial_{x-yy} = \frac{\partial_{y+}(Dx\nu\partial_{yy} + \partial_{x+})}{Dy}
+\]
+substituting this into equation \ref{xdelta}
+\[
+\partial_{xx}\Delta = \frac{Dy\partial_{x+}\Delta - (1-\nu)\partial_{y+}(Dx\nu\partial_{yy} + \partial_{x+})}{DxDy}
+\]
+by symmetry
+\[
+\partial_{yy}\Delta = \frac{Dx\partial_{y+}\Delta - (1-\nu)\partial_{x+}(Dy\nu\partial_{xx} + \partial_{y+})}{DxDy}
+\]
+so, at the bottom-left corner
+\begin{equation}
+\Delta\Delta = \frac{Dx\partial_{y+}\Delta + Dy\partial_{x+}\Delta - (1-\nu)(\partial_{y+}(Dx\nu\partial_{yy} + \partial_{x+}) + \partial_{x+}(Dy\nu\partial_{xx} + \partial_{y+}))}{DxDy}
+\end{equation}
+%%\tableofcontents
+
+%%\appendix
+
+\end{document}
