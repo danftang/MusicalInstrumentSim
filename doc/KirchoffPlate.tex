@@ -16,7 +16,7 @@
 \maketitle
 The vibrations in a thin, isotropic, homogeneous plate can be described as
 \[
-\frac{\partial^2 u}{\partial t^2} = -\kappa^2 \Delta \Delta u
+\frac{\partial^2 u}{\partial t^2} = -\kappa^2 \nabla^2 \nabla^2 u
 \]
 where
 \[
@@ -64,47 +64,54 @@ At a left-hand edge, from equation \ref{boundary1} we have
 \]
 so
 \begin{equation}
-\Delta = \partial_{xx} + \partial_{yy} = (1-\nu)\partial_{yy}
+\nabla^2 = \partial_{xx} + \partial_{yy} = (1-\nu)\partial_{yy}
 \label{delta}
 \end{equation}
 
 Rearranging equation \ref{boundary2} gives
 \[
-\partial_{x-}(\Delta + (1-\nu)\partial_{yy}) = 0
+\partial_{x-}(\nabla^2 + (1-\nu)\partial_{yy}) = 0
 \]
 so, at a left-hand edge
 \begin{equation}
-\partial_{x-}\Delta = (1-\nu)\partial_{x-yy}
+\partial_{x-}\nabla^2 = (1-\nu)\partial_{x-yy}
 \end{equation}
 but
 \begin{equation}
-\partial_{xx}\Delta = \frac{\partial_{x+}\Delta - \partial_{x-}\Delta}{Dx} = \frac{\partial_{x+}\Delta - (1-\nu)\partial_{x-yy}}{Dx}
+\partial_{xx}\nabla^2 = \frac{\partial_{x+}\nabla^2 - \partial_{x-}\nabla^2}{\Delta x} = \frac{\partial_{x+}\nabla^2 - (1-\nu)\partial_{x-yy}}{\Delta x}
 \label{xdelta}
 \end{equation}
-where $Dx$ is the grid spacing in the $x$ direction.
+where $\Delta x$ is the grid spacing in the $x$ direction.
 
 Differentiating equation \ref{boundary1} with respect to y gives
 \[
-\partial_{xxyy} = \frac{\partial_{x+yy} - \partial_{x-yy}}{Dx}= -\nu\partial_{yyyy}
+\partial_{xxyy} = \frac{\partial_{x+yy} - \partial_{x-yy}}{\Delta x}= -\nu\partial_{yyyy}
 \]
 so
 \[
-\partial_{x-yy} = \partial_{x+yy} + Dx\nu\partial_{yyyy}
+\partial_{x-yy} = \partial_{x+yy} + \Delta x\nu\partial_{yyyy}
 \]
 substituting back into equation \ref{xdelta}
 \[
-\partial_{xx}\Delta = \frac{\partial_{x+}\Delta -(1-\nu)(\partial_{x+yy} + Dx\nu\partial_{yyyy})}{Dx}
+\partial_{xx}\nabla^2 = \frac{\partial_{x+}\nabla^2 -(1-\nu)(\partial_{x+yy} + \Delta x\nu\partial_{yyyy})}{\Delta x}
 \]
 but, differentiating equation \ref{delta} by y gives
 \[
-\partial_{yy}\Delta = (1-\nu)\partial_{yyyy}
+\partial_{yy}\nabla^2 = (1-\nu)\partial_{yyyy}
 \]
 so, at a left-hand edge
 \begin{equation}
-\Delta\Delta = \frac{\partial_{x+}\Delta -(1-\nu)\partial_{x+yy}}{Dx} - (1-\nu)^2\partial_{yyyy}
+\nabla^2\nabla^2 = \frac{\partial_{x+}\nabla^2 -(1-\nu)\partial_{x+yy}}{\Delta x} - (1-\nu)^2\partial_{yyyy}
+\end{equation}
+simplifying gives
+\begin{equation}
+\nabla^2\nabla^2 = \frac{\partial_{x+}(\partial_{xx} +\nu\partial_{yy})}{\Delta x} - (1-\nu)^2\partial_{yyyy}
 \label{DeltaDelta}
 \end{equation}
-
+this is convenient to calculate since, on the left-hand edge,
+\[
+\partial_{xx} +\nu\partial_{yy} = 0
+\]
 \subsection{Laplacian finite difference at a corner}
 At the bottom-left corner we have, from equation \ref{boundary1},
 \[
@@ -114,40 +121,45 @@ and
 \[
 \partial_{yy} = - \nu \partial_{xx} 
 \]
-Since $\nu$ is positive, this implies $\partial_{xx} = 0$ and $\partial_{yy} = 0$ so $\Delta = 0$
+Since $\nu$ is positive, this implies $\partial_{xx} = 0$ and $\partial_{yy} = 0$ so $\nabla^2 = 0$
 
 At the corner, we cannot differentiate past the corner, so we need to calculate $\partial_{x-yy}$ in a different way:
 \[
-\partial_{x-yy} = \frac{\partial_{x-}(\partial_{y+} - \partial_{y-})}{Dy}
+\partial_{x-yy} = \frac{\partial_{x-}(\partial_{y+} - \partial_{y-})}{\Delta y}
 \]
 so, from equation \ref{boundarycorner}
 \[
-\partial_{x-yy} = \frac{\partial_{x-y+}}{Dy}
+\partial_{x-yy} = \frac{\partial_{x-y+}}{\Delta y}
 \]
 However,  along the left-hand edge
 \[
-\frac{\partial_{x+} - \partial_{x-}}{Dx}=-\nu\partial_{yy}
+\frac{\partial_{x+} - \partial_{x-}}{\Delta x}=-\nu\partial_{yy}
 \]
 so
 \[
- \partial_{x-}=Dx\nu\partial_{yy} + \partial_{x+}
+ \partial_{x-}=\Delta x\nu\partial_{yy} + \partial_{x+}
 \]
 so
 \[
-\partial_{x-yy} = \frac{\partial_{y+}(Dx\nu\partial_{yy} + \partial_{x+})}{Dy}
+\partial_{x-yy} = \frac{\partial_{y+}(\Delta x\nu\partial_{yy} + \partial_{x+})}{\Delta y}
 \]
 substituting this into equation \ref{xdelta}
 \[
-\partial_{xx}\Delta = \frac{Dy\partial_{x+}\Delta - (1-\nu)\partial_{y+}(Dx\nu\partial_{yy} + \partial_{x+})}{DxDy}
+\partial_{xx}\nabla^2 = \frac{\Delta y\partial_{x+}\nabla^2 - (1-\nu)\partial_{y+}(\Delta x\nu\partial_{yy} + \partial_{x+})}{\Delta x\Delta y}
 \]
 by symmetry
 \[
-\partial_{yy}\Delta = \frac{Dx\partial_{y+}\Delta - (1-\nu)\partial_{x+}(Dy\nu\partial_{xx} + \partial_{y+})}{DxDy}
+\partial_{yy}\nabla^2 = \frac{\Delta x\partial_{y+}\nabla^2 - (1-\nu)\partial_{x+}(\Delta y\nu\partial_{xx} + \partial_{y+})}{\Delta x\Delta y}
 \]
 so, at the bottom-left corner
 \begin{equation}
-\Delta\Delta = \frac{Dx\partial_{y+}\Delta + Dy\partial_{x+}\Delta - (1-\nu)(\partial_{y+}(Dx\nu\partial_{yy} + \partial_{x+}) + \partial_{x+}(Dy\nu\partial_{xx} + \partial_{y+}))}{DxDy}
+\nabla^2\nabla^2 = \frac{\Delta x\partial_{y+}\nabla^2 + \Delta y\partial_{x+}\nabla^2 - (1-\nu)(\partial_{y+}(\Delta x\nu\partial_{yy} + \partial_{x+}) + \partial_{x+}(\Delta y\nu\partial_{xx} + \partial_{y+}))}{\Delta x\Delta y}
 \end{equation}
+simplifying gives
+\begin{equation}
+\nabla^2\nabla^2 = \frac{\partial_{y+}(\nabla^2- \nu(1-\nu)\partial_{yy})}{\Delta y} + \frac{\partial_{x+}(\nabla^2-\nu(1-\nu)\partial_{xx} )}{\Delta x} - \frac{2(1-\nu)\partial_{x+y+}}{\Delta x\Delta y}
+\end{equation}
+which is convenient to calculate as, on the corner, $\nabla^2 - \nu(1-\nu)\partial_{yy} = 0$ and $\nabla^2 - \nu(1-\nu)\partial_{xx} = 0$
 %%\tableofcontents
 
 %%\appendix
